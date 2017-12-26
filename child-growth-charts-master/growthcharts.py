@@ -5,11 +5,10 @@
 # http://github.com/dqsis/child-growth-charts
 # -------------------------------------
 
-
 # Import libraries
 import os
 from sys import exit
-
+#import library 3rd numpy dan matplotlib pastikan install dulu
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -17,17 +16,15 @@ import matplotlib.pyplot as plt
 # I/O files path
 path = 'data/'
 
-
 # Read child's data (user input)
 chdata = 'child_data.csv'
-
 
 # Gender (male or female)
 childfile = open(os.path.join(path,chdata))
 genderline = childfile.readline()
 
 # Age, weight, height, head circumference
-charray = np.genfromtxt(os.path.join(path,chdata), delimiter=',', dtype = None, skiprows=2)
+charray = np.genfromtxt(os.path.join(path,chdata), delimiter=',', dtype = None, skip_header=2)
 
 # ---
 # Not required! Missing data ignored by plotting! 
@@ -52,16 +49,50 @@ if genderline[7] == 'f':
 else:
     print('no data available for boys yet')
     exit()
-   
-    
+
+############################ BANTUAN SAJA : BACA ##################
+# COBA PRINT DULU SALAH SATU ARRAY DATANYA : print awarray 
+print "==================== SEKILAS NUMPY NDARRAY DAN MATRIX ====================================== "
+print "*) Ada 2 Jenis format yaitu : 1. Array/N-Dimensional Array (ndarray)"
+print "                              2. numpy Matrix" 
+print "*) Format keduanya pada dasarnya adalah array[] semua index dimulai dari 0."
+print "*) Tetapi sedikit berbeda dengan array biasa (tampilan antar [] tidak ada koma, lihat contoh dibawah!)"
+print "*) Format tampilan Keduanya Saat di print SAMA."
+print "*) numpy Matrix adalah turunan dari ndArray sehingga cara aksesnya di keduanya sama."
+print "*) Kalau perbedaan format 1 dan 2, pada objek numpy matrix bisa dilakukan proses2x OPERASI MATRIX,"
+print "   Misalnya perkalian, inverse, Transpose, dsb. Sedangkan ndarray tidak bisa (KECUALI di python versi 3.5 ke atas !!!)"
+print "   https://stackoverflow.com/questions/4151128/what-are-the-differences-between-numpy-arrays-and-matrices-which-one-should-i-u \n"
+print "====================== ARRAY BIASA ========================================================= "
+print "BERIKUT ini adalah FORMAT TAMPILAN Array 2 Dimensi biasa (Bukan dari Numpy) :" 
+array_biasa = [[1,2,3,4] , [5,6,7,8]]
+print array_biasa
+print "CARA AKSES : Kalau mau akses item dengan nilai 2  maka caranya array_biasa[0][1] : "
+print array_biasa[0][1]
+print "============================================================================================ "
+
+print "====================== NDARRAY DAN NUMPY MATRIX ============================================ "
+print "Sedangkan Dalam script ini menggunakan np.loadtxt yang akan mengembalikan format ndArray berikut adalah FORMAT TAMPILAN hasil print dr awarray : "
+print "Ini data Age vs Weight yang di load dalam menggunakan library numpy dalam format numpy :"
+print awarray
+print "\n CARA AKSES : Ada 2 Cara yaitu POSISI ITEM menggunakan method item.(Baris,Kolom) => awarray.item( (2,3) ) = \n"
+print awarray.item( (2,3) )
+print "\n Atau , dengan INDEX ITEM dimana indeks item ke- 0 dimulai dari kiri atas sampai ke kanan bawah adalah index item ke-n (terakhir)"
+print "Misal ndarray/matriks: awarray [B x K] = [24 x 10] , maka utk item ke 11 dari ndarray/matriks trsbt = 3.1611 (lihat hasil print awarray diatas!) = \n" 
+print awarray.item(11)
+print "============================================================================================ "
+
+####################################################
 # Plots
 plt.figure()
-
-
 # Age vs weight
+
+# array[:,0] ==> (Month) slicing semua data ditiap baris di kolom index ke 0 
+# array[:,1] ==> slicing semua data ditiap baris di kolom index ke 1 
+
+# plt.plot(x,y,[kode_utk_nampilin_jenis_point_di_matlab_ex: r, r--, bo, k-, dll.])
 plt.subplot(2,2,1)
 plt.plot(\
-awarray[:,0],awarray[:,1],'r--',\
+awarray[:,0],awarray[:,1],'r',\
 awarray[:,0],awarray[:,2],'r--',\
 awarray[:,0],awarray[:,3],'r--',\
 awarray[:,0],awarray[:,4],'r--',\
@@ -73,11 +104,16 @@ awarray[:,0],awarray[:,9],'r--',\
 charray[:,0],charray[:,1],'bo')
 
 plt.grid(True)
+# set label untuk axis (horizontal X)
 plt.xlabel('age [months]')
+# set label untuk axis (Vertikal Y)
 plt.ylabel('weight [kg]')
+# set limit lebar satuan axis X sampai 24 satuan (Month)
 plt.xlim([0,24])
+# set garis selisish jarak yang ditampilkan pada chart = 3 
 plt.xticks(np.arange(0,25,3)) 
 
+#Menambahkan point (tulisan) pada plot
 plt.text(awarray[13,0], awarray[13,1],'2%',fontsize=6)
 plt.text(awarray[14,0], awarray[14,2],'5%',fontsize=6)
 plt.text(awarray[15,0], awarray[15,3],'10%',fontsize=6)
@@ -155,7 +191,7 @@ plt.xticks(np.arange(45,111,10))
 plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
 # Show & save graphs
-plt.show()
+#plt.show()
 
 plt.savefig(os.path.join(path,'growth.pdf'))
 plt.savefig(os.path.join(path,'growth.png'))
